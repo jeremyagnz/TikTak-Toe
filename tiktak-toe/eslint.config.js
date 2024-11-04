@@ -22,6 +22,7 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      "editor.fontLigatures": true,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -32,6 +33,10 @@ export default [
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+      'warn', 
+        { varsIgnorePattern: '^TURNS$' }
       ],
     },
   },
