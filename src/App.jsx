@@ -5,6 +5,7 @@ import { TURNS } from "./constant";
 import { checkEndGame, checkWinnerFrom } from "./logic/board";
 import { WinnerModal } from "./components/WinnerModal";
 import { BoardGame } from "./components/BoardGame";
+import { resetGameStorage, saveGameToStorage } from "./storage/indes";
 
 
 function App() {
@@ -26,8 +27,7 @@ function App() {
     setTurn(TURNS.x);
     setwinner(null);
 
-    window.localStorage.removeItem('board')
-    window.localStorage.removeItem('turn')
+   resetGameStorage();
   }
 
 
@@ -41,20 +41,20 @@ function App() {
     const newTurn = turn === TURNS.x ? TURNS.O : TURNS.x;
     setTurn(newTurn);
 
-    window.localStorage.setItem('board', JSON.stringify(newBoard))
-    window.localStorage.setItem('turn', newTurn);
+    saveGameToStorage({
+      board: newBoard,
+      turn: newTurn
+    })
 
 
     const newWinner = checkWinnerFrom(newBoard);
     if (newWinner) {
       confetti();
       setwinner(newWinner);
-      window.localStorage.removeItem('board');
-      window.localStorage.removeItem('turn');
+      resetGameStorage();
     } else if (checkEndGame(newBoard)) {
       setwinner(false);
-      window.localStorage.removeItem('board');
-      window.localStorage.removeItem('turn');
+      resetGameStorage();
     }
   }
 
