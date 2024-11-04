@@ -8,8 +8,16 @@ import { BoardGame } from "./components/BoardGame";
 
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(TURNS.x);
+
+  const [board, setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board');
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null);
+  });
+  const [turn, setTurn] = useState(() => {
+   const turnFromStorage = window.localStorage.getItem('turn');
+    return turnFromStorage ?? TURNS.x;
+    
+  });
   const [winner, setwinner] = useState(null);
 
 
@@ -17,6 +25,9 @@ function App() {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.x);
     setwinner(null);
+
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
   }
 
 
@@ -30,12 +41,20 @@ function App() {
     const newTurn = turn === TURNS.x ? TURNS.O : TURNS.x;
     setTurn(newTurn);
 
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('turn', newTurn);
+
+
     const newWinner = checkWinnerFrom(newBoard);
     if (newWinner) {
       confetti();
-      setwinner(newWinner)
+      setwinner(newWinner);
+      window.localStorage.removeItem('board');
+      window.localStorage.removeItem('turn');
     } else if (checkEndGame(newBoard)) {
-      setwinner(false)
+      setwinner(false);
+      window.localStorage.removeItem('board');
+      window.localStorage.removeItem('turn');
     }
   }
 
